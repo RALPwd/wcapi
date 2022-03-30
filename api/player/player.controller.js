@@ -1,21 +1,22 @@
-const { getAllUsers } = require('./player.service');
+const { getAllPlayer,createPlayer } = require('./player.service');
 
-async function handleGetAllUsers(req, res) {
-  console.log('player.controller.js');
-  const player = await getAllUsers();
-  res.json(player);
+async function handleGetAllplayer(req, res) {
+  const player = await getAllPlayer();
+  res.status(200).json(player);
 }
 
-// async function handleGetUser(req, res) {
-//   const { id } = req.params;
-//   const player = await getUser(id);
+async function handleCreatePlayer(req,res){
+  const player = {...req.body,
+    "picture":"https://i.imgur.com/I2aG4PJ.png",
+    "state":0};
+  try {
+    const playerCreate = await createPlayer(player);
+     return res.status(201).json(playerCreate)
 
-//   if (!player) {
-//     res.status(404).json({ message: 'Player not found' });
-//   } else {
-//     res.json(player);
-//   }
-// }
+  } catch (error) {
+   return res.status(500).json(error)
+  }
+}
 
-module.exports = { handleGetAllUsers };
+module.exports = { handleGetAllplayer,handleCreatePlayer };
 

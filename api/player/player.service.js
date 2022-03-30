@@ -1,8 +1,13 @@
-const playerModel = require('./player.model');
+const playerM = require('./player.model');
 
-function getAllUsers() {
-  console.log('player.service.js');
-  return playerModel.find();
+async function getAllPlayer() {
+  const players = await playerM.find();
+  return  players
 }
 
-module.exports = { getAllUsers };
+async function createPlayer(playeJson){
+  const newPlayer = await playerM.create(playeJson)
+  return newPlayer;
+}
+
+module.exports = { getAllPlayer ,createPlayer};

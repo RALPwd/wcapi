@@ -1,13 +1,12 @@
 const { Router } = require("express");
-const { handleGetAllUsers } = require("./player.controller");
+const { handleGetAllplayer,handleCreatePlayer } = require("./player.controller");
 
-(() => {
-  console.log("index.js");
-})();
+
 
 const router = Router();
 
-router.get("/", handleGetAllUsers);
+router.get("/", handleGetAllplayer);
+router.post("/", handleCreatePlayer);
 
 
 module.exports = router;
