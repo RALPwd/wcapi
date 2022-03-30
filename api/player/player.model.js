@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const playerSchema = new mongoose.Schema({
+const PlayerSchema = new mongoose.Schema({
  nick:{
    type: String,
    required: true,
@@ -14,13 +14,13 @@ const playerSchema = new mongoose.Schema({
    required: true,
    trim: true,
     minlength: 4,
-   maxlength:20,
  },
  email:{
    type: String,
    required: true,
    trim: true,
    minlength: 11,
+   unique:true,
 
  },
  password:{
@@ -45,7 +45,7 @@ const playerSchema = new mongoose.Schema({
   versionKey: false,
 })
 
-playerSchema.pre('save', async function(next){
+PlayerSchema.pre('save', async function(next){
 const player = this;
 
 try {
@@ -57,19 +57,19 @@ try {
   const hash = await bcrypt.hash(player.password,salt);
 
   player.password=hash;
-  return  next(user);
+  return  next(player);
 
 } catch (error) {
   return next(error);
 }
 });
 
-player.methods.comparePassword = async function (candidatePassword){
+PlayerSchema.methods.comparePassword = async function (candidatePassword){
   const player = this;
   return bcrypt.compare(candidatePassword,player.password)
 }
 
 
-const Player = mongoose.model('Player', playerSchema);
+const Player = mongoose.model('Player', PlayerSchema);
 
 module.exports = Player;
