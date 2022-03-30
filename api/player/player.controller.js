@@ -10,11 +10,12 @@ async function handleCreatePlayer(req,res){
     "picture":"https://i.imgur.com/I2aG4PJ.png",
     "state":0};
   try {
-    const playerCreate = await createPlayer(player);
-     return res.status(201).json(playerCreate)
+
+     const playerCreated = await createPlayer(player);
+     res.status(201).json(playerCreated)
 
   } catch (error) {
-   return res.status(500).json(error)
+    res.status(500).json(error)
   }
 }
 

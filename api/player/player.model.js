@@ -57,7 +57,7 @@ try {
   const hash = await bcrypt.hash(player.password,salt);
 
   player.password=hash;
-  return  next(player);
+  return  next();
 
 } catch (error) {
   return next(error);
