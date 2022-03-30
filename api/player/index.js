@@ -1,13 +1,13 @@
-const { Router } = require('express');
-const { handleGetAllUsers, handleGetUser } = require('./player.controller');
+const { Router } = require("express");
+const { handleGetAllUsers } = require("./player.controller");
 
 (() => {
-  console.log('index.js');
+  console.log("index.js");
 })();
 
 const router = Router();
 
-router.get('/', handleGetAllUsers);
-// router.get('/:id', handleGetUser);
+router.get("/", handleGetAllUsers);
+
 
 module.exports = router;
