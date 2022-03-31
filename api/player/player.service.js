@@ -10,4 +10,9 @@ async function createPlayer(playeJson){
   return newPlayer;
 }
 
-module.exports = { getAllPlayer ,createPlayer};
+async function getPlayerEmail(email){
+  const player = await playerM.findOne({ email });
+  return player;
+}
+
+module.exports = { getAllPlayer ,createPlayer,getPlayerEmail};
