@@ -1,8 +1,9 @@
 const player =  require ('./api/player');
+const authLocal = require('./auth/local');
 
 function routes (app) {
-  console.log('routes.js');
   app.use('/api/players', player);
+  app.use('/auth/local', authLocal);
 }
 
 module.exports = routes;
