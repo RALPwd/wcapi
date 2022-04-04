@@ -3,6 +3,7 @@ const {
   getAllPlayer,
   createPlayer,
   getPlayerEmail,
+  updatePlayer,
 } = require("./player.service");
 
 async function handleGetAllplayer(req, res) {
@@ -37,6 +38,12 @@ async function handleCreatePlayer(req, res) {
 //   return res.status(200).json(PlayerEmail);
 // }
 
+async function handlerRutaPutEditionById(req, res) {
+  const bdy = req.body;
+  await updatePlayer(bdy);
+  res.status(200).json({ message: "Profile updated " });
+}
+
 async function handlePlayerLogin(req, res) {
   const { email, password } = req.body;
 
@@ -66,4 +73,5 @@ module.exports = {
   handleGetAllplayer,
   handleCreatePlayer,
   handlePlayerLogin,
+  handlerRutaPutEditionById,
 };
