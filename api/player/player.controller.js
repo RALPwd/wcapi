@@ -26,19 +26,44 @@ async function handleCreatePlayer(req, res) {
   }
 }
 
-async function handleGetLoginEmail(req, res) {
-  const { email } = req.body;
-  const PlayerEmail = await getPlayerEmail(email);
+// async function handleGetLoginEmail(req, res) {
+//   const { email } = req.body;
+//   const PlayerEmail = await getPlayerEmail(email);
 
-  if (!PlayerEmail) {
-    return res.status(404).json({ error: "correo no encontrado" });
+//   if (!PlayerEmail) {
+//     return res.status(404).json({ error: "correo no encontrado" });
+//   }
+
+//   return res.status(200).json(PlayerEmail);
+// }
+
+async function handlePlayerLogin(req, res) {
+  const { email, password } = req.body;
+
+  try {
+    const player = await getPlayerEmail(email);
+
+    if (!player) {
+      return res
+        .status(401)
+        .json({ message: "Invalid email please check again " });
+    }
+
+    const isMatch = await player.comparePassword(password);
+    if (!isMatch) {
+      return res
+        .status(401)
+        .json({ message: "Invalid password please check again " });
+    }
+
+    return res.status(200).json(player);
+  } catch (error) {
+    return res.status(400).json(error);
   }
-
-  return res.status(200).json(PlayerEmail);
 }
 
 module.exports = {
   handleGetAllplayer,
   handleCreatePlayer,
-  handleGetLoginEmail,
+  handlePlayerLogin,
 };
