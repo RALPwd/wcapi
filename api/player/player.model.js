@@ -40,6 +40,14 @@ const PlayerSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    gamePlayed: {
+      type: Number,
+      required: true,
+    },
+    gameWon: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -71,12 +79,13 @@ PlayerSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 PlayerSchema.virtual("profile").get(function () {
-  const { nick, name, email } = this;
+  const { nick, gamePlayed, gameWon, picture } = this;
 
   return {
     nick,
-    name,
-    email,
+    gamePlayed,
+    gameWon,
+    picture,
   };
 });
 
