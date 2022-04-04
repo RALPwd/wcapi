@@ -3,6 +3,7 @@ const {
   handleGetAllplayer,
   handleCreatePlayer,
   handlePlayerLogin,
+  handlerRutaPutEditionById,
 } = require("./player.controller");
 
 const router = Router();
@@ -10,5 +11,6 @@ const router = Router();
 router.get("/", handleGetAllplayer);
 router.post("/", handleCreatePlayer);
 router.post("/email/", handlePlayerLogin);
+router.put("/", handlerRutaPutEditionById);
 
 module.exports = router;
