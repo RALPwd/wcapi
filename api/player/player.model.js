@@ -48,6 +48,8 @@ const PlayerSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
   },
   {
     timestamps: true,

@@ -1,4 +1,6 @@
-const res = require("express/lib/response");
+const crypto = require('crypto');
+const { sendMailSendGrid } = require('../../utils/emails');
+
 const {
   getAllPlayer,
   createPlayer,
@@ -12,31 +14,39 @@ async function handleGetAllplayer(req, res) {
 }
 
 async function handleCreatePlayer(req, res) {
-  const player = {
+  
+  try {
+    const tokenHash = crypto.createHash('sha256').update(req.body.email).digest('hex');
+    const player = {
     ...req.body,
     picture: "https://i.imgur.com/I2aG4PJ.png",
     state: 0,
     gamePlayed: 0,
     gameWon: 0,
+    passwordResetToken: tokenHash,
+    passwordResetExpires: Date.now() + 3600000 * 24,
   };
-  try {
+
+      const email = {
+      from: '"no reply 👻" <dayanalexismanrique@hotmail.com>',
+      to: player.email,
+      subject: 'Activate your account WORD COMBAT',
+      template_id: 'd-79b85ada3a46413281c2d92261edffef',
+      dynamic_template_data: {
+        name:player.name,
+        passwordResetExpires:player.passwordResetExpires,
+        url: `http://localhost:3000/activate/${tokenHash}`,
+      },
+    };
+
+    await sendMailSendGrid(email);
+
     const playerCreated = await createPlayer(player);
     res.status(201).json(playerCreated);
   } catch (error) {
     res.status(500).json(error);
   }
 }
-
-// async function handleGetLoginEmail(req, res) {
-//   const { email } = req.body;
-//   const PlayerEmail = await getPlayerEmail(email);
-
-//   if (!PlayerEmail) {
-//     return res.status(404).json({ error: "correo no encontrado" });
-//   }
-
-//   return res.status(200).json(PlayerEmail);
-// }
 
 async function handlerRutaPutEditionById(req, res) {
   const bdy = req.body;

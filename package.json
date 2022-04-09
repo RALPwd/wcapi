@@ -15,6 +15,7 @@
     "nodemon": "^2.0.15"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.6.2",
     "bcrypt": "^5.0.1",
     "composable-middleware": "^0.3.0",
     "cors": "^2.8.5",
@@ -23,7 +24,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.8"
   },
-  "engines":{
+  "engines": {
     "node": "17.7.1",
     "npm": "8.5.2"
   }
