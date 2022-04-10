@@ -90,8 +90,9 @@ PlayerSchema.virtual("profile").get(function () {
     picture,
     state
   };
-});
-
-const Player = mongoose.model("Player", PlayerSchema);
-
-module.exports = Player;
+}); 
+ 
+const Player = mongoose .model("Player", PlayerSchema);
+ 
+module.exports = Player ;
+ 
