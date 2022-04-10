@@ -19,4 +19,14 @@ async function updatePlayer(body) {
   return await playerM.findByIdAndUpdate({ _id: body._id }, { $set: body });
 }
 
-module.exports = { getAllPlayer, createPlayer, getPlayerEmail, updatePlayer };
+async function findOnePlayer(token){
+  const player= await  playerM.findOne(token);
+  return player
+}
+
+async function deletePlayer(playerid){
+  await playerM.deleteOne(playerid);
+  return 'Player deleted'
+}
+
+module.exports = { getAllPlayer, createPlayer, getPlayerEmail, updatePlayer ,findOnePlayer,deletePlayer};
