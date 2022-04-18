@@ -1,4 +1,5 @@
 const playerM = require("./player.model");
+const bcrypt = require("bcrypt");
 
 async function getAllPlayer() {
   const players = await playerM.find();
@@ -29,6 +30,20 @@ async function deletePlayer(playerid) {
   return "Player deleted";
 }
 
+async function updatePlayerPassword(gamer, newPassword) {
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newPassword, salt);
+    gamer.password = hash;
+    return await playerM.findOneAndUpdate(
+      { email: gamer.email },
+      { $set: gamer }
+    );
+  } catch (error) {
+    console.log("Error : ", error);
+  }
+}
+
 async function changePasswordPlayer(player) {
   return await playerM.findByIdAndUpdate({ _id: player._id }, player);
 }
@@ -38,7 +53,12 @@ module.exports = {
   createPlayer,
   getPlayerEmail,
   updatePlayer,
+<<<<<<< HEAD
   findOnePlayer,
   deletePlayer,
   changePasswordPlayer,
+=======
+  changePasswordPlayer,
+  updatePlayerPassword,
+>>>>>>> ff5d5d1 (Feature  change Password)
 };

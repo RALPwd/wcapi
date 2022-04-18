@@ -6,6 +6,7 @@ const {
   createPlayer,
   getPlayerEmail,
   updatePlayer,
+  updatePlayerPassword,
 } = require("./player.service");
 
 async function handleGetAllplayer(req, res) {
@@ -98,6 +99,19 @@ async function handlePlayerLogin(req, res) {
     return res.status(200).json(player);
   } catch (error) {
     return res.status(400).json(error);
+  }
+}
+
+async function handlerRutaPutChangePassword(req, res) {
+  const player = await getPlayerEmail(req.body.email);
+  const validation = await player.comparePassword(req.body.oldpassword);
+
+  if (validation) {
+    const { _id, password } = req.body;
+    const plyact = await updatePlayerPassword(player, password);
+    res.status(200).json(plyact);
+  } else {
+    res.status(406).json("Old password doesn't match");
   }
 }
 

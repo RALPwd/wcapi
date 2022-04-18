@@ -12,8 +12,11 @@
   "author": "Top 20 RCD",
   "license": "MIT",
   "devDependencies": {
+    "jest": "^27.5.1",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "superagent": "^7.1.2",
+    "supertest": "^6.2.2"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.6.2",

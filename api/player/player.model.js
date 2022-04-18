@@ -54,7 +54,7 @@ const PlayerSchema = new mongoose.Schema(
   {
     timestamps: true,
     versionKey: false,
-  },
+  }
 );
 
 PlayerSchema.pre("save", async function (next) {
@@ -90,9 +90,8 @@ PlayerSchema.virtual("profile").get(function () {
     picture,
     state
   };
-}); 
- 
-const Player = mongoose .model("Player", PlayerSchema);
- 
-module.exports = Player ;
- 
+});
+
+const Player = mongoose.model("Player", PlayerSchema);
+
+module.exports = Player;
