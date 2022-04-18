@@ -53,12 +53,8 @@ module.exports = {
   createPlayer,
   getPlayerEmail,
   updatePlayer,
-<<<<<<< HEAD
   findOnePlayer,
   deletePlayer,
   changePasswordPlayer,
-=======
-  changePasswordPlayer,
   updatePlayerPassword,
->>>>>>> ff5d5d1 (Feature  change Password)
 };

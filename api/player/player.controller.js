@@ -60,8 +60,9 @@ async function handleCreatePlayer(req, res) {
 
 async function handlerRutaPutEditionById(req, res) {
   const bdy = req.body;
+  console.log(bdy);
   await updatePlayer(bdy);
-  res.status(200).json({ message: "Profile updated " });
+  res.status(202).json({ message: "Profile updated " });
 }
 
 async function handlerRutaPutChangePassword(req, res) {
@@ -102,7 +103,7 @@ async function handlePlayerLogin(req, res) {
   }
 }
 
-async function handlerRutaPutChangePassword(req, res) {
+/*async function handlerRutaPutChangePassword(req, res) {
   const player = await getPlayerEmail(req.body.email);
   const validation = await player.comparePassword(req.body.oldpassword);
 
@@ -113,7 +114,7 @@ async function handlerRutaPutChangePassword(req, res) {
   } else {
     res.status(406).json("Old password doesn't match");
   }
-}
+}*/
 
 module.exports = {
   handleGetAllplayer,
