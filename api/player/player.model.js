@@ -81,13 +81,14 @@ PlayerSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 PlayerSchema.virtual("profile").get(function () {
-  const { nick, gamePlayed, gameWon, picture } = this;
+  const { nick, gamePlayed, gameWon, picture,state } = this;
 
   return {
     nick,
     gamePlayed,
     gameWon,
     picture,
+    state
   };
 });
 

@@ -12,18 +12,22 @@ async function handlePlayerLogin(req, res) {
     if (!player) {
       return res
         .status(401)
-        .json({ message: "Invalid email please check again " });
+        .json({status:401, message: "Invalid email please check again " });
+    }else if(!player.state){
+         return res
+        .status(401)
+        .json({status:401, message: "please verify your email " });
     }
 
     const isMatch = await player.comparePassword(password);
     if (!isMatch) {
       return res
         .status(401)
-        .json({ message: "Invalid password please check again " });
+        .json({ status:401, message: "Invalid password please check again " });
     }
 
     const token = signToken(player.profile);
-    return res.status(200).json(token);
+    return res.status(200).json({token,player});
   } catch (error) {
     return res.status(400).json(error);
   }
