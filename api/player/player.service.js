@@ -49,10 +49,6 @@ async function updatePlayerPassword(gamer, newPassword) {
   }
 }
 
-async function changePasswordPlayer(player) {
-  return await playerM.findByIdAndUpdate({ _id: player._id }, player);
-}
-
 module.exports = {
   getAllPlayer,
   createPlayer,
@@ -60,7 +56,6 @@ module.exports = {
   updatePlayer,
   findOnePlayer,
   deletePlayer,
-  changePasswordPlayer,
   updatePlayerPassword,
   getPlayerNick
 };

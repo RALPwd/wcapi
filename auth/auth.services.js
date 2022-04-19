@@ -14,8 +14,8 @@ async function validateToken(token) {
 
 function isAuthenticated(req, res, next) {
   return compose().use(async (req, res, next) => {
+    console.log("Auth: ", req.body);
     const autHeader = req.headers.authorization;
-
     if (!autHeader) {
       return res.status(401).end();
       //res.redirect("http://localhost:3000/");
@@ -29,7 +29,6 @@ function isAuthenticated(req, res, next) {
     const player = await getPlayerEmail(payload.email);
 
     if (!player) {
-      console.log(payload);
       return res.status(401).end();
     }
 
