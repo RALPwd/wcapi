@@ -18,7 +18,7 @@ async function handleCreatePlayer(req, res) {
   try {
     const emailVerification = await getPlayerEmail(req.body.email);
 
-    if (emailVerification.email) {
+    if (emailVerification) {
       return res.status(400).json({ status: 400, message: "email is used" });
     }
 
