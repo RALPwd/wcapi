@@ -1,9 +1,19 @@
 const mongoose = require('mongoose');
 
 const GameSchema = new mongoose.Schema({
-    playerOneId: String,
-    playerTwoId: String,
-    winnerId: String,
+    playerOneId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Player',
+        required: true
+    },
+    playerTwoId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Player',
+    },
+    winnerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Player',
+    },
     wordToGuess: String,
     attemptsPlayer1: [String],
     attemptsPlayer2: [String],

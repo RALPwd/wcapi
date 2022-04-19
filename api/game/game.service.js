@@ -12,5 +12,10 @@ async function getGame(id) {
   return game;
 }
 
+async function editGame(id, game) {
+  const updatedGame = await Game.findByIdAndUpdate(id, game);
+  return updatedGame;
+}
 
-module.exports = { createGame, getGame };
+
+module.exports = { createGame, getGame, editGame };

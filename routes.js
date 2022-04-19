@@ -1,4 +1,5 @@
 const player =  require ('./api/player');
+const game = require('./api/game');
 const authLocal = require('./auth/local');
 const donations = require('./api/donations');
 

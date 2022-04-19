@@ -1,11 +1,10 @@
 const {
   createGame,
   getGame,
-  // editGame,
+  editGame,
 } = require('./game.service');
 
 async function handleCreateGame(req, res) {
-  // console.log(req.body);
   try {
     const game = await createGame(req.body);
     console.log(game)
@@ -24,4 +23,13 @@ async function handleGetGame(req, res) {
   }
 }
 
-module.exports = { handleCreateGame, handleGetGame };
+async function handleEditGame(req, res) {
+  try {
+    const game = await editGame(req.params.id, req.body);
+    res.status(200).json(game);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
+
+module.exports = { handleCreateGame, handleGetGame, handleEditGame };
