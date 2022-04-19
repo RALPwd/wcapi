@@ -72,9 +72,8 @@ async function handleCreatePlayer(req, res) {
 
 async function handlerRutaPutEditionById(req, res) {
   const bdy = req.body;
-  console.log(bdy);
   await updatePlayer(bdy);
-  res.status(202).json({ message: "The profile have been updated sucessfully" });
+  res.status(202).json({ status: 202, message: "El perfil ha sido actualizado" });
 }
 
 async function handlerRutaPutChangePassword(req, res) {

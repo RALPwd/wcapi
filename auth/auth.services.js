@@ -7,18 +7,15 @@ async function validateToken(token) {
     const payload = await jsonwebtoken.verify(token, "secret_token");
     return payload;
   } catch (error) {
-    console.log(error);
     return null;
   }
 }
 
 function isAuthenticated(req, res, next) {
   return compose().use(async (req, res, next) => {
-    console.log("Auth: ", req.body);
     const autHeader = req.headers.authorization;
     if (!autHeader) {
       return res.status(401).end();
-      //res.redirect("http://localhost:3000/");
     }
     const [, token] = autHeader.split(" ");
     const payload = await validateToken(token);
