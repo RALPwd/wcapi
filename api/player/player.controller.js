@@ -46,7 +46,7 @@ async function handleCreatePlayer(req, res) {
         name: player.name,
         subject:
           "este correo es para verificar tu cuentra de wordcombat porfavor no responder",
-        url: `http://localhost:3000/activate/${tokenHash}`,
+        url: `${process.env.VERSEL_FRONTEND}${tokenHash}`,
       },
     };
 
