@@ -12,7 +12,7 @@ const router = Router();
 
 router.get("/", handleGetAllplayer);
 router.post("/", handleCreatePlayer);
-router.put("/", isAuthenticated, handlerRutaPutEditionById);
-router.patch("/changepassword/",isAuthenticated , handlerRutaPutChangePassword);
+router.put("/", isAuthenticated(), handlerRutaPutEditionById);
+router.patch("/changepassword/",isAuthenticated(), handlerRutaPutChangePassword);
 
 module.exports = router;

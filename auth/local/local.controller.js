@@ -8,7 +8,7 @@ const { signToken } = require("../auth.services");
 
 async function handlePlayerLogin(req, res) {
   const { email, password } = req.body;
-
+  console.log("Login: ", req.body );
   try {
     const player = await getPlayerEmail(email);
 

@@ -74,36 +74,21 @@ async function handlerRutaPutEditionById(req, res) {
   const bdy = req.body;
   console.log(bdy);
   await updatePlayer(bdy);
-  res.status(202).json({ message: "Profile updated " });
+  res.status(202).json({ message: "The profile have been updated sucessfully" });
 }
 
 async function handlerRutaPutChangePassword(req, res) {
-  const objeto = req.body;
-  const player = getPlayerEmail(req.body.email);
+   const player = await getPlayerEmail(req.body.email);
+   const validation = await player.comparePassword(req.body.oldpassword);
 
-  if (player.comparePassword(req.body.oldpassword)) {
-    const plyact = updatePlayer(objeto);
-    res.status(200).json(plyact);
-  } else {
-
-    res.status(406).json("Old passwords doesn't match");
-  }
+   if (validation) {
+     const { password } = req.body;
+     const plyact = await updatePlayerPassword(player, password);
+     res.status(200).json({ message: "The password have been update sucessfully" });
+   } else {
+     res.status(406).json("The Old password doesn't match");
+   }
 }
-
-
-// async function handlerRutaPutChangePassword(req, res) {
-//   const player = await getPlayerEmail(req.body.email);
-//   const validation = await player.comparePassword(req.body.oldpassword);
-
-//   if (validation) {
-//     const { _id, password } = req.body;
-//     const plyact = await updatePlayerPassword(player, password);
-//     res.status(200).json(plyact);
-//   } else {
-//     res.status(406).json("Old password doesn't match");
-//   }
-
-// }
 
 module.exports = {
   handleGetAllplayer,
