@@ -22,6 +22,7 @@ async function handleCreatePlayer(req, res) {
       return res.status(400).json({ status: 400, message: "email is used" });
     }
 
+
     const tokenHash = crypto
       .createHash("sha256")
       .update(req.body.email)
@@ -50,7 +51,6 @@ async function handleCreatePlayer(req, res) {
     };
 
     await sendMailSendGrid(email);
-
     const playerCreated = await createPlayer(player);
     return res.status(201).json(playerCreated);
   } catch (error) {
