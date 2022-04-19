@@ -16,6 +16,11 @@ async function getPlayerEmail(email) {
   return player;
 }
 
+async function getPlayerNick(nick){
+  const player = await playerM.findOne({ nick });
+  return player;
+}
+
 async function updatePlayer(body) {
   return await playerM.findByIdAndUpdate({ _id: body._id }, { $set: body });
 }
@@ -57,4 +62,5 @@ module.exports = {
   deletePlayer,
   changePasswordPlayer,
   updatePlayerPassword,
+  getPlayerNick
 };
