@@ -1,4 +1,5 @@
 const playerM = require("./player.model");
+const bcrypt = require("bcrypt");
 
 async function getAllPlayer() {
   const players = await playerM.find();
@@ -19,14 +20,41 @@ async function updatePlayer(body) {
   return await playerM.findByIdAndUpdate({ _id: body._id }, { $set: body });
 }
 
-async function findOnePlayer(token){
-  const player= await  playerM.findOne(token);
-  return player
+async function findOnePlayer(token) {
+  const player = await playerM.findOne(token);
+  return player;
 }
 
-async function deletePlayer(playerid){
+async function deletePlayer(playerid) {
   await playerM.deleteOne(playerid);
-  return 'Player deleted'
+  return "Player deleted";
 }
 
-module.exports = { getAllPlayer, createPlayer, getPlayerEmail, updatePlayer ,findOnePlayer,deletePlayer};
+async function updatePlayerPassword(gamer, newPassword) {
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newPassword, salt);
+    gamer.password = hash;
+    return await playerM.findOneAndUpdate(
+      { email: gamer.email },
+      { $set: gamer }
+    );
+  } catch (error) {
+    console.log("Error : ", error);
+  }
+}
+
+async function changePasswordPlayer(player) {
+  return await playerM.findByIdAndUpdate({ _id: player._id }, player);
+}
+
+module.exports = {
+  getAllPlayer,
+  createPlayer,
+  getPlayerEmail,
+  updatePlayer,
+  findOnePlayer,
+  deletePlayer,
+  changePasswordPlayer,
+  updatePlayerPassword,
+};

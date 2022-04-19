@@ -12,11 +12,13 @@ async function validateToken(token) {
   }
 }
 
-function isAuthenticated() {
+function isAuthenticated(req, res, next) {
   return compose().use(async (req, res, next) => {
-    const autHeader = req.header.authorization;
+    const autHeader = req.headers.authorization;
+
     if (!autHeader) {
       return res.status(401).end();
+      //res.redirect("http://localhost:3000/");
     }
     const [, token] = autHeader.split(" ");
     const payload = await validateToken(token);
@@ -27,6 +29,7 @@ function isAuthenticated() {
     const player = await getPlayerEmail(payload.email);
 
     if (!player) {
+      console.log(payload);
       return res.status(401).end();
     }
 
