@@ -7,6 +7,7 @@ const {
   getPlayerEmail,
   updatePlayer,
   updatePlayerPassword,
+  getPlayerNick,
 } = require("./player.service");
 
 async function handleGetAllplayer(req, res) {
@@ -19,7 +20,17 @@ async function handleCreatePlayer(req, res) {
     const emailVerification = await getPlayerEmail(req.body.email);
 
     if (emailVerification) {
-      return res.status(400).json({ status: 400, message: "email is used" });
+      return res.status(400).json({ status: 400, message: "Este correo ya está registrado" });
+    }
+
+    const nickVerification = await getPlayerNick(req.body.nick.toLowerCase());
+
+    if (nickVerification) {
+      return res.status(400).json({ status: 400, message: "Este nick ya está registrado" });
+    }
+        
+    if(req.body.password.length < 6){
+      return res.status(400).json({ status: 400, message: "La contraseña debe tener al menos 6 caracteres" });
     }
 
 
@@ -46,7 +57,8 @@ async function handleCreatePlayer(req, res) {
         name: player.name,
         subject:
           "este correo es para verificar tu cuentra de wordcombat porfavor no responder",
-        url: `${process.env.VERSEL_FRONTEND}${tokenHash}`,
+        // url: `${process.env.VERSEL_FRONTEND}${tokenHash}`,
+        url: `http://localhost:3000/activate/${tokenHash}`,
       },
     };
 

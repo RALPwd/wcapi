@@ -9,6 +9,7 @@ const PlayerSchema = new mongoose.Schema(
       trim: true,
       minlength: 4,
       maxlength: 20,
+      unique: true,
     },
     name: {
       type: String,
