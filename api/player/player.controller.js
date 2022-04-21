@@ -1,5 +1,7 @@
 const crypto = require("crypto");
+const fs = require("fs");
 const { sendMailSendGrid } = require("../../utils/emails");
+const cloudinary = require("cloudinary").v2;
 
 const {
   getAllPlayer,
@@ -71,7 +73,7 @@ async function handleCreatePlayer(req, res) {
 }
 
 async function handlerRutaPutEditionById(req, res) {
-  const bdy = req.body;
+  const bdy = {...req.body };
   await updatePlayer(bdy);
   res.status(202).json({ status: 202, message: "El perfil ha sido actualizado" });
 }
@@ -89,10 +91,30 @@ async function handlerRutaPutChangePassword(req, res) {
    }
 }
 
+async function handlerUpdateAvatar(req, res) {
+  async function uploadImage(image){
+    try {
+      const result = await cloudinary.uploader.upload(image);
+      const player = { ...req.player._doc, picture: result.url };
+      await updatePlayer(player);
+      fs.unlink(image, function (err) {
+        if (err) throw err;
+        // if no error, file has been deleted successfully
+        console.log('File deleted!');
+    });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  uploadImage(req.file.path);
+  res.status(200).json({ message: "The avatar has been update sucessfully" });
+}
+
+
 module.exports = {
   handleGetAllplayer,
   handleCreatePlayer,
   handlerRutaPutEditionById,
   handlerRutaPutChangePassword,
-  
+  handlerUpdateAvatar,
 };
