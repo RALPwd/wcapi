@@ -4,7 +4,6 @@ const { sendMailSendGrid } = require("../../utils/emails");
 const cloudinary = require("cloudinary").v2;
 
 const {
-  getAllPlayer,
   createPlayer,
   getPlayerEmail,
   updatePlayer,
@@ -16,25 +15,41 @@ async function handleGetAllplayer(req, res) {
   const player = await getAllPlayer();
   res.status(200).json(player);
 }
-
+async function handleSession(req, res) {
+  try {
+    return res
+        .status(200)
+        .json({ status: 200, message: "Este correo ya está registrado", ...req.player });
+    
+  } catch (error) {
+    
+  }
+  
+}
 async function handleCreatePlayer(req, res) {
   try {
     const emailVerification = await getPlayerEmail(req.body.email);
 
     if (emailVerification) {
-      return res.status(400).json({ status: 400, message: "Este correo ya está registrado" });
+      return res
+        .status(400)
+        .json({ status: 400, message: "Este correo ya está registrado" });
     }
 
     const nickVerification = await getPlayerNick(req.body.nick.toLowerCase());
 
     if (nickVerification) {
-      return res.status(400).json({ status: 400, message: "Este nick ya está registrado" });
-    }
-        
-    if(req.body.password.length < 6){
-      return res.status(400).json({ status: 400, message: "La contraseña debe tener al menos 6 caracteres" });
+      return res
+        .status(400)
+        .json({ status: 400, message: "Este nick ya está registrado" });
     }
 
+    if (req.body.password.length < 6) {
+      return res.status(400).json({
+        status: 400,
+        message: "La contraseña debe tener al menos 6 caracteres",
+      });
+    }
 
     const tokenHash = crypto
       .createHash("sha256")
@@ -73,26 +88,30 @@ async function handleCreatePlayer(req, res) {
 }
 
 async function handlerRutaPutEditionById(req, res) {
-  const bdy = {...req.body };
+  const bdy = { ...req.body };
   await updatePlayer(bdy);
-  res.status(202).json({ status: 202, message: "El perfil ha sido actualizado" });
+  res
+    .status(202)
+    .json({ status: 202, message: "El perfil ha sido actualizado" });
 }
 
 async function handlerRutaPutChangePassword(req, res) {
-   const player = await getPlayerEmail(req.body.email);
-   const validation = await player.comparePassword(req.body.oldpassword);
+  const player = await getPlayerEmail(req.body.email);
+  const validation = await player.comparePassword(req.body.oldpassword);
 
-   if (validation) {
-     const { password } = req.body;
-     const plyact = await updatePlayerPassword(player, password);
-     res.status(200).json({ message: "The password have been update sucessfully" });
-   } else {
-     res.status(406).json("The Old password doesn't match");
-   }
+  if (validation) {
+    const { password } = req.body;
+    const plyact = await updatePlayerPassword(player, password);
+    res
+      .status(200)
+      .json({ message: "The password have been update sucessfully" });
+  } else {
+    res.status(406).json("The Old password doesn't match");
+  }
 }
 
 async function handlerUpdateAvatar(req, res) {
-  async function uploadImage(image){
+  async function uploadImage(image) {
     try {
       const result = await cloudinary.uploader.upload(image);
       const player = { ...req.player._doc, picture: result.url };
@@ -100,16 +119,16 @@ async function handlerUpdateAvatar(req, res) {
       fs.unlink(image, function (err) {
         if (err) throw err;
         // if no error, file has been deleted successfully
-        console.log('File deleted!');
-    });
+        console.log("File deleted!");
+      });
     } catch (error) {
       console.log(error);
     }
-  };
+  }
+  console.log(req.file.path);
   uploadImage(req.file.path);
   res.status(200).json({ message: "The avatar has been update sucessfully" });
 }
-
 
 module.exports = {
   handleGetAllplayer,
@@ -117,4 +136,5 @@ module.exports = {
   handlerRutaPutEditionById,
   handlerRutaPutChangePassword,
   handlerUpdateAvatar,
+  handleSession,
 };

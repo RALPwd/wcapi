@@ -1,11 +1,11 @@
 const { Router } = require("express");
 const multer = require("multer");
 const {
-  handleGetAllplayer,
+  handleSession,
   handleCreatePlayer,
   handlerRutaPutEditionById,
   handlerRutaPutChangePassword,
-  handlerUpdateAvatar
+  handlerUpdateAvatar,
 } = require("./player.controller");
 
 const upload = multer({ dest: "./temp" });
@@ -14,10 +14,19 @@ const { isAuthenticated } = require("../../auth/auth.services");
 
 const router = Router();
 
-router.get("/", handleGetAllplayer);
 router.post("/", handleCreatePlayer);
+router.get("/session/", isAuthenticated(), handleSession);
 router.put("/", isAuthenticated(), handlerRutaPutEditionById);
-router.post("/upload", isAuthenticated(), upload.single("file"), handlerUpdateAvatar);
-router.patch("/changepassword/",isAuthenticated(), handlerRutaPutChangePassword);
+router.post(
+  "/upload",
+  isAuthenticated(),
+  upload.single("file"),
+  handlerUpdateAvatar,
+);
+router.patch(
+  "/changepassword/",
+  isAuthenticated(),
+  handlerRutaPutChangePassword,
+);
 
 module.exports = router;

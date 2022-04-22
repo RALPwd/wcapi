@@ -8,7 +8,6 @@ const { signToken } = require("../auth.services");
 
 async function handlePlayerLogin(req, res) {
   const { email, password } = req.body;
-  console.log("Login: ", req.body );
   try {
     const player = await getPlayerEmail(email);
 
@@ -30,7 +29,7 @@ async function handlePlayerLogin(req, res) {
     }
 
     const token = signToken(player.profile);
-    return res.status(200).json({ token, player });
+    return res.status(200).json({token});
   } catch (error) {
     return res.status(400).json(error);
   }
