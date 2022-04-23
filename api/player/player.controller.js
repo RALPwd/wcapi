@@ -96,7 +96,8 @@ async function handlerRutaPutEditionById(req, res) {
 }
 
 async function handlerRutaPutChangePassword(req, res) {
-  const player = await getPlayerEmail(req.body.email);
+  try {
+        const player= req.player
   const validation = await player.comparePassword(req.body.oldpassword);
 
   if (validation) {
@@ -104,10 +105,15 @@ async function handlerRutaPutChangePassword(req, res) {
     const plyact = await updatePlayerPassword(player, password);
     res
       .status(200)
-      .json({ message: "The password have been update sucessfully" });
+      .json({ status:200, message: "la contrasena se actualizo correctamente" });
   } else {
-    res.status(406).json("The Old password doesn't match");
+    res.status(406).json({ status:406, message: "la contrasena no coincide" });
   }
+  } catch (error) {
+    console.log(error);
+    return  res.status(200).json({ status:500, message: "error no previsto" });
+  }
+
 }
 
 async function handlerUpdateAvatar(req, res) {
@@ -118,14 +124,12 @@ async function handlerUpdateAvatar(req, res) {
       await updatePlayer(player);
       fs.unlink(image, function (err) {
         if (err) throw err;
-        // if no error, file has been deleted successfully
         console.log("File deleted!");
       });
     } catch (error) {
       console.log(error);
     }
   }
-  console.log(req.file.path);
   uploadImage(req.file.path);
   res.status(200).json({ message: "The avatar has been update sucessfully" });
 }

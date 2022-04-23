@@ -40,7 +40,7 @@ async function updatePlayerPassword(gamer, newPassword) {
       { $set: gamer },
     );
   } catch (error) {
-    console.log("Error : ", error);
+    return error;
   }
 }
 
