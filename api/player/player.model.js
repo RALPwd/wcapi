@@ -49,6 +49,9 @@ const PlayerSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    customerId: {
+      type: String,
+    },
     passwordResetToken: String,
     passwordResetExpires: Date,
   },
