@@ -134,6 +134,52 @@ async function handlerUpdateAvatar(req, res) {
   res.status(200).json({ message: "The avatar has been update sucessfully" });
 }
 
+
+async function handlerRutaPutRecoveryPassword(req, res) {
+   
+  function genPassRandom(nCar){
+    
+    let newPass = 0;
+    for(i=1; i <= nCar; i++){
+      const dgt = Math.round(Math.random() * 10);
+      newPass += ("" +  dgt); 
+    }
+
+    return(newPass);
+
+  }
+
+  const player = await getPlayerEmail(req.body.email);
+
+  if (player){
+    const bthBdy = new Date(req.body.birthday + "T00:00:00.000Z");
+    const bthPly = new Date(player.birthday);
+    if ((bthPly.getTime() == bthBdy.getTime()) && (player.nick === req.body.nick)) {
+      
+      const np = genPassRandom(Math.round(Math.random() * 10) + 6);
+      const plyact = await updatePlayerPassword(player, np);
+      //Envío de correo con nuevo pasword temporal.
+      const email = {
+        from: '"no reply 👻" <dayanalexismanrique@hotmail.com>',
+        to: player.email,
+        subject: "Recovery your account WORD COMBAT password",
+        template_id: "d-a894e3711ec047089b8056a786400dbd",
+        dynamic_template_data: {
+          name: player.nick,
+          password:np,
+        },
+      };
+      await sendMailSendGrid(email);
+      res.status(200).json({ status: 202, message: "Se ha enviado un correo con el nuevo password" });
+    } else {
+      res.status(404).json({ status: 404,  message:"Los datos de fecha de nacimiento y/o nick no corresponden."});
+    }
+  }else{
+    res.status(404).json({ status: 404, message: "El usuario no aparece registrado en el sistema." });
+  }
+}
+
+
 module.exports = {
   handleGetAllplayer,
   handleCreatePlayer,
@@ -141,4 +187,5 @@ module.exports = {
   handlerRutaPutChangePassword,
   handlerUpdateAvatar,
   handleSession,
+  handlerRutaPutRecoveryPassword,
 };
