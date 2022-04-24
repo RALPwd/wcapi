@@ -20,15 +20,15 @@ const DonationsSchema = new mongoose.Schema(
         required:true
       },
       factura:{
-        type:string,
+        type:String,
         required:true
       },
       autorizacion:{
-        type:string,
+        type:String,
         required:true
       },
       fecha:{
-        type:string,
+        type:String,
         required:true
       }
     }
