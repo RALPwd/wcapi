@@ -16,16 +16,17 @@ const epayco = require('epayco-sdk-node')({
 
 
 async function handlecreateDonation(req, res) {
+ 
   try {
     const creditInfo = {
       "card[number]": req.body.cardNumber,
       "card[exp_year]": req.body.cardExpYear,
       "card[exp_month]": req.body.cardExpMonth,
-      "card[cvc]": req.body.cardCvc
+      "card[cvc]": req.body.cardCvc,
     }
+  
     const player = req.player._doc;
     const token = await epayco.token.create(creditInfo);
-    let newCustomerId = null;
     if(!player.customerId) {
       const customerInfo = {
         token_card: token.id,
@@ -54,19 +55,33 @@ async function handlecreateDonation(req, res) {
       dues: 1,
       ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress
     }
+    
     const payment = await epayco.charge.create(paymentInfo)
+    console.log(payment);
     if(payment.status === false){
       res.status(400).json({ message: payment.message, error: payment.data.errors[0] });
     } else {
       if(payment.data.estado === ('Rechazada' || 'Fallida' || 'Pendiente')){
         res.status(402).json({message: payment.data.respuesta, status: '402'})
       } else {
-        await createDonation(req.body);
+        const donationInfo={
+          player:player._id,
+          amount:req.body.amount,
+          message:req.body.message,
+          bill:{
+            ref_payco:payment.data.ref_payco,
+            factura:payment.data.factura,
+            autorizacion:payment.data.autorizacion,
+            fecha:payment.data.fecha
+          }
+        }
+
+        await createDonation(donationInfo);
         res.status(201).json({message: `Gracias por donar, por ti ahora somos ${paymentInfo.value} pesos más ricos.`, status: '201'});
       }
     }
   } catch (error) {
-    console.error(error);
+    res.status(500).json({message: error, status: '500'});
   }
 }
 

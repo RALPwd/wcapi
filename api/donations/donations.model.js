@@ -14,6 +14,24 @@ const DonationsSchema = new mongoose.Schema(
     message: {
       type: String,
     },
+    bill:{
+      ref_payco:{
+        type:Number,
+        required:true
+      },
+      factura:{
+        type:string,
+        required:true
+      },
+      autorizacion:{
+        type:string,
+        required:true
+      },
+      fecha:{
+        type:string,
+        required:true
+      }
+    }
   },
   {
     timestamps: true,
