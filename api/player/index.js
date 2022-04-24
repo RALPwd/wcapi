@@ -6,6 +6,7 @@ const {
   handlerRutaPutEditionById,
   handlerRutaPutChangePassword,
   handlerUpdateAvatar,
+  handlerRutaPutRecoveryPassword,
 } = require("./player.controller");
 
 const upload = multer({ dest: "./temp" });
@@ -28,5 +29,6 @@ router.patch(
   isAuthenticated(),
   handlerRutaPutChangePassword,
 );
+router.put("/recoverypassword/", handlerRutaPutRecoveryPassword);
 
 module.exports = router;
