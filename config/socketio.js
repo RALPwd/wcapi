@@ -1,13 +1,14 @@
 const socketio = require("socket.io");
-const http = require("http");
 
-function serverIoCreation(app) {
-  const server = http.createServer(app);
-  const io = require("socket.io")(server, {
+const socket = {};
+
+function connectSocket(server) {
+  const io = socketio(server, {
     cors: {
       origin: "*",
     },
   });
+  socket.io = io;
 
   io.on("connection", (socket) => {
     let playerName;
@@ -32,8 +33,6 @@ function serverIoCreation(app) {
       io.emit("mensajes", disconect);
     });
   });
-
-  server.listen(3001, () => console.log("servidor inicializado"));
 }
 
-module.exports = serverIoCreation;
+module.exports = { connectSocket, socket };
