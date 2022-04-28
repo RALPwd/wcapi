@@ -2,7 +2,6 @@ const crypto = require("crypto");
 const fs = require("fs");
 const { sendMailSendGrid } = require("../../utils/emails");
 const cloudinary = require("cloudinary").v2;
-
 const {
   createPlayer,
   getPlayerEmail,
@@ -17,15 +16,14 @@ async function handleGetAllplayer(req, res) {
 }
 async function handleSession(req, res) {
   try {
-    return res
-        .status(200)
-        .json({ status: 200, message: "Este correo ya está registrado", ...req.player });
-    
-  } catch (error) {
-    
-  }
-  
+    return res.status(200).json({
+      status: 200,
+      message: "Este correo ya está registrado",
+      ...req.player,
+    });
+  } catch (error) {}
 }
+
 async function handleCreatePlayer(req, res) {
   try {
     const emailVerification = await getPlayerEmail(req.body.email);
@@ -96,23 +94,25 @@ async function handlerRutaPutEditionById(req, res) {
 
 async function handlerRutaPutChangePassword(req, res) {
   try {
-        const player= req.player
-  const validation = await player.comparePassword(req.body.oldpassword);
+    const player = req.player;
+    const validation = await player.comparePassword(req.body.oldpassword);
 
-  if (validation) {
-    const { password } = req.body;
-    const plyact = await updatePlayerPassword(player, password);
-    res
-      .status(200)
-      .json({ status:200, message: "la contrasena se actualizo correctamente" });
-  } else {
-    res.status(406).json({ status:406, message: "la contrasena no coincide" });
-  }
+    if (validation) {
+      const { password } = req.body;
+      const plyact = await updatePlayerPassword(player, password);
+      res.status(200).json({
+        status: 200,
+        message: "la contrasena se actualizo correctamente",
+      });
+    } else {
+      res
+        .status(406)
+        .json({ status: 406, message: "la contrasena no coincide" });
+    }
   } catch (error) {
     console.log(error);
-    return  res.status(200).json({ status:500, message: "error no previsto" });
+    return res.status(200).json({ status: 500, message: "error no previsto" });
   }
-
 }
 
 async function handlerUpdateAvatar(req, res) {
@@ -133,28 +133,23 @@ async function handlerUpdateAvatar(req, res) {
   res.status(200).json({ message: "The avatar has been update sucessfully" });
 }
 
-
 async function handlerRutaPutRecoveryPassword(req, res) {
-   
-  function genPassRandom(nCar){
-    
+  function genPassRandom(nCar) {
     let newPass = 0;
-    for(i=1; i <= nCar; i++){
+    for (i = 1; i <= nCar; i++) {
       const dgt = Math.round(Math.random() * 10);
-      newPass += ("" +  dgt); 
+      newPass += "" + dgt;
     }
 
-    return(newPass);
-
+    return newPass;
   }
 
   const player = await getPlayerEmail(req.body.email);
 
-  if (player){
+  if (player) {
     const bthBdy = new Date(req.body.birthday + "T00:00:00.000Z");
     const bthPly = new Date(player.birthday);
-    if ((bthPly.getTime() == bthBdy.getTime()) && (player.nick === req.body.nick)) {
-      
+    if (bthPly.getTime() == bthBdy.getTime() && player.nick === req.body.nick) {
       const np = genPassRandom(Math.round(Math.random() * 10) + 6);
       const plyact = await updatePlayerPassword(player, np);
       //Envío de correo con nuevo pasword temporal.
@@ -165,19 +160,27 @@ async function handlerRutaPutRecoveryPassword(req, res) {
         template_id: "d-a894e3711ec047089b8056a786400dbd",
         dynamic_template_data: {
           name: player.nick,
-          password:np,
+          password: np,
         },
       };
       await sendMailSendGrid(email);
-      res.status(200).json({ status: 202, message: "Se ha enviado un correo con el nuevo password" });
+      res.status(200).json({
+        status: 202,
+        message: "Se ha enviado un correo con el nuevo password",
+      });
     } else {
-      res.status(404).json({ status: 404,  message:"Los datos de fecha de nacimiento y/o nick no corresponden."});
+      res.status(404).json({
+        status: 404,
+        message: "Los datos de fecha de nacimiento y/o nick no corresponden.",
+      });
     }
-  }else{
-    res.status(404).json({ status: 404, message: "El usuario no aparece registrado en el sistema." });
+  } else {
+    res.status(404).json({
+      status: 404,
+      message: "El usuario no aparece registrado en el sistema.",
+    });
   }
 }
-
 
 module.exports = {
   handleGetAllplayer,
