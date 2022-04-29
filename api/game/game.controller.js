@@ -7,10 +7,9 @@ const {
 async function handleCreateGame(req, res) {
   try {
     const game = await createGame(req.body);
-    console.log(game)
-    res.status(201).json(game);
+    res.status(201).json({game: game, status: 201});
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message, status: 400 });
   }
 }
 

@@ -8,8 +8,10 @@ const {
 
 const router = Router();
 
-router.post('/newgame', handleCreateGame);
-router.patch('/game/edit/:id', handleEditGame);
-router.get('/game/:id', handleGetGame);
+const { isAuthenticated } = require("../../auth/auth.services");
+
+router.post('/newgame', isAuthenticated(), handleCreateGame);
+router.patch('/edit/:id', handleEditGame);
+router.get('/:id', handleGetGame);
 
 module.exports = router;
