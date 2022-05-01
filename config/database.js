@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const URI = process.env.MONGO_DB_URI_RALP;
+const URI = process.env.MONGO_DB_URI;
 
 async function connectDB(){
   try{
