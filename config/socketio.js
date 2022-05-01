@@ -15,7 +15,7 @@ function connectSocket(server) {
     socket.on("conectado", (nombre) => {
       playerName = nombre;
       const dataToSubmit = {
-        message: "se a conectado",
+        message: "se ha conectado",
         author: nombre,
       };
       io.emit("mensajes", dataToSubmit);
@@ -24,6 +24,19 @@ function connectSocket(server) {
     socket.on("mensaje", (dataToSubmit) => {
       io.emit("mensajes", dataToSubmit);
     });
+
+    let gameId;
+
+    socket.on("juego", (dataReceived) => {
+      gameId = dataReceived._id;
+      io.emit("juego", dataReceived);
+    });
+
+    socket.on(gameId, (dataReceived) => {
+      console.log(dataReceived);
+      io.emit(gameId, dataReceived);
+    });
+
 
     socket.on("disconnect", () => {
       const disconect = {
