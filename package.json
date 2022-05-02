@@ -33,6 +33,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
     "password-validator": "^5.2.1",
+    "random-words-es": "^1.1.1",
     "socket.io": "^4.5.0",
     "supertest": "^6.2.2"
   },

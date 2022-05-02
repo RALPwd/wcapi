@@ -1,6 +1,7 @@
 const socketio = require("socket.io");
 const { createGame } = require("../api/game/game.service");
 const socket = {};
+const randomWords = require('random-words-es');
 
 function connectSocket(server) {
   const io = socketio(server, {
@@ -34,6 +35,8 @@ function connectSocket(server) {
 
     io.emit("cantidadPlayers", Object.keys(players).length);
 
+    let idGame
+
     socket.on("agregarPlayers", async (player) => {
       players[socket.id] = player;
       io.emit("cantidadPlayers", Object.keys(players).length);
@@ -51,13 +54,23 @@ function connectSocket(server) {
         };
 
         const grameCreation = await createGame(game);
-        io.emit("createGame", grameCreation._id);
+        let word
+        do {
+          [word] = randomWords({ exactly: 1, maxLength: 5 });
+        } while ([...word].length < 5);
+        word = word.toUpperCase();
+        idGame = grameCreation._id;
+        io.emit("createGame", {idGame, word});
         io.emit(`${grameCreation._id}`, { player1, player2 });
         const deleteid = Object.keys(players);
         delete players[deleteid[0]];
         delete players[deleteid[1]];
         io.emit("cantidadPlayers", Object.keys(players).length);
       }
+    });
+
+    socket.on('emitTurn', (data) => {
+      console.log(data);
     });
 
     socket.on("quitarEmprejamiento", (socketid) => {
