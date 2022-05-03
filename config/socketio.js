@@ -70,13 +70,15 @@ function connectSocket(server) {
     });
 
     socket.on('emitTurn', (data) => {
-      console.log(data);
+      console.log("data", data);
+      io.emit('emitTurn', data);
     });
 
     socket.on("quitarEmprejamiento", (socketid) => {
       delete players[socketid];
       io.emit("cantidadPlayers", Object.keys(players).length);
     });
+    
 
     /* END MULTIPLAYER LOGIC */
 
