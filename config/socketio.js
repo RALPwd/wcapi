@@ -1,7 +1,7 @@
 const socketio = require("socket.io");
 const { createGame } = require("../api/game/game.service");
 const socket = {};
-const randomWords = require('random-words-es');
+const randomWords = require("random-words-es");
 
 function connectSocket(server) {
   const io = socketio(server, {
@@ -18,15 +18,16 @@ function connectSocket(server) {
     let playerName;
     socket.on("conectado", (nombre) => {
       playerName = nombre;
-      const dataToSubmit = {
-        message: "se ha conectado",
-        author: nombre,
-      };
-      io.emit("mensajes", dataToSubmit);
+      // const dataToSubmit = {
+      //   message: "se ha conectado",
+      //   author: nombre,
+      // };
+      // io.emit("mensajes", dataToSubmit);
     });
 
-    socket.on("mensaje", (dataToSubmit) => {
-      io.emit("mensajes", dataToSubmit);
+    socket.on("mensaje", (dataT) => {
+      console.log(dataT.typeChat);
+      io.emit(`${dataT.typeChat}`, dataT.dataToSubmit);
     });
 
     /*END CHAT*/
@@ -35,7 +36,7 @@ function connectSocket(server) {
 
     io.emit("cantidadPlayers", Object.keys(players).length);
 
-    let idGame
+    let idGame;
 
     socket.on("agregarPlayers", async (player) => {
       players[socket.id] = player;
@@ -44,23 +45,24 @@ function connectSocket(server) {
         const socketIds = Object.values(players);
         const player1 = socketIds[0];
         const player2 = socketIds[1];
+        let word;
+        do {
+          [word] = randomWords({ exactly: 1, maxLength: 5 });
+        } while ([...word].length < 5);
+        word = word.toUpperCase();
         const game = {
           playerOneId: player1._id,
           playerTwoId: player2._id,
           winnerId: null,
-          wordToGuess: null,
+          wordToGuess: word,
           attemptsPlayer1: [],
           attemptsPlayer2: [],
         };
 
         const grameCreation = await createGame(game);
-        let word
-        do {
-          [word] = randomWords({ exactly: 1, maxLength: 5 });
-        } while ([...word].length < 5);
-        word = word.toUpperCase();
+
         idGame = grameCreation._id;
-        io.emit("createGame", {idGame, word});
+        io.emit("createGame", { idGame, word });
         io.emit(`${grameCreation._id}`, { player1, player2 });
         const deleteid = Object.keys(players);
         delete players[deleteid[0]];
@@ -69,16 +71,15 @@ function connectSocket(server) {
       }
     });
 
-    socket.on('emitTurn', (data) => {
+    socket.on("emitTurn", (data) => {
       console.log("data", data);
-      io.emit('emitTurn', data);
+      io.emit("emitTurn", data);
     });
 
     socket.on("quitarEmprejamiento", (socketid) => {
       delete players[socketid];
       io.emit("cantidadPlayers", Object.keys(players).length);
     });
-    
 
     /* END MULTIPLAYER LOGIC */
 
