@@ -59,11 +59,11 @@ function connectSocket(server) {
           attemptsPlayer2: [],
         };
 
-        const grameCreation = await createGame(game);
+        const gameCreation = await createGame(game);
 
-        idGame = grameCreation._id;
+        idGame = gameCreation._id;
         io.emit("createGame", { idGame, word });
-        io.emit(`${grameCreation._id}`, { player1, player2 });
+        io.emit(`${gameCreation._id}`, { player1, player2 });
         const deleteid = Object.keys(players);
         delete players[deleteid[0]];
         delete players[deleteid[1]];
@@ -77,6 +77,7 @@ function connectSocket(server) {
     });
 
     socket.on("quitarEmprejamiento", (socketid) => {
+      console.log("quitarEmprejamiento", socketid);
       delete players[socketid];
       io.emit("cantidadPlayers", Object.keys(players).length);
     });
