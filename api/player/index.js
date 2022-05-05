@@ -3,6 +3,7 @@ const multer = require("multer");
 const {
   handleSession,
   handleCreatePlayer,
+  handleGetPlayerById,
   handlerRutaPutEditionById,
   handlerRutaPutChangePassword,
   handlerUpdateAvatar,
@@ -18,6 +19,7 @@ const router = Router();
 router.post("/", handleCreatePlayer);
 router.get("/session/", isAuthenticated(), handleSession);
 router.put("/", isAuthenticated(), handlerRutaPutEditionById);
+router.get("/:id", isAuthenticated(), handleGetPlayerById);
 router.post(
   "/upload",
   isAuthenticated(),

@@ -16,6 +16,11 @@ async function getPlayerNick(nick) {
   return player;
 }
 
+async function getPlayerById(id) {
+  const player = await playerM.findById(id);
+  return player;
+}
+
 async function updatePlayer(body) {
   return await playerM.findByIdAndUpdate({ _id: body._id }, { $set: body });
 }
@@ -46,6 +51,7 @@ async function updatePlayerPassword(gamer, newPassword) {
 
 module.exports = {
   createPlayer,
+  getPlayerById,
   getPlayerEmail,
   updatePlayer,
   findOnePlayer,

@@ -5,6 +5,7 @@ const cloudinary = require("cloudinary").v2;
 const {
   createPlayer,
   getPlayerEmail,
+  getPlayerById,
   updatePlayer,
   updatePlayerPassword,
   getPlayerNick,
@@ -22,6 +23,29 @@ async function handleSession(req, res) {
       ...req.player,
     });
   } catch (error) {}
+}
+
+async function handleGetPlayerById(req, res) {
+  try {
+    const player = await getPlayerById(req.params.id);
+    if(!player) {
+      return res.status(404).json({
+        status: 404,
+        message: "Player not found",
+      });
+    } else {
+      return res.status(200).json({
+        status: 200,
+        message: "Success",
+        ...player,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Error",
+    });
+  }
 }
 
 async function handleCreatePlayer(req, res) {
@@ -184,6 +208,7 @@ async function handlerRutaPutRecoveryPassword(req, res) {
 
 module.exports = {
   handleGetAllplayer,
+  handleGetPlayerById,
   handleCreatePlayer,
   handlerRutaPutEditionById,
   handlerRutaPutChangePassword,
