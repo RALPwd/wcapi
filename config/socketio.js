@@ -13,6 +13,7 @@ function connectSocket(server) {
   socket.io = io;
 
   let players = {};
+   let playersFriend = {};
   /*CHAT*/
   io.on("connection", (socket) => {
     let playerName;
@@ -83,6 +84,70 @@ function connectSocket(server) {
     });
 
     /* END MULTIPLAYER LOGIC */
+
+    /*MACHMAKIN FRIEND */
+
+    socket.on('emparejamientoamigo', async ({data,code,type})=>{
+      if(type==='create'){
+        playersFriend[socket.id] = {jugador:data,code}; 
+        console.log('jugador esperando',Object.keys(playersFriend).length);
+      }
+      if(type==='join'){
+        const socketIds = Object.values(playersFriend);
+        //Para el control z
+        socket.emit('arrayOfCreater', socketIds)
+        socket.on('verificateArray',async()=>{
+          playersFriend[socket.id] = {jugador:data,code}; 
+          console.log('jugador esperando',Object.keys(playersFriend).length);
+          const socketIds2 = Object.values(playersFriend);
+          const filtetPlayers2 = socketIds2.filter(codearray => codearray.code===code)
+           console.log('cantidad de jugadores luego del join ', filtetPlayers2.length);
+           if (filtetPlayers2.length === 2) {
+              const player1 = filtetPlayers2[0];
+              const player2 = filtetPlayers2[1];     
+                let word;
+              do {
+                [word] = randomWords({ exactly: 1, maxLength: 5 });
+              } while ([...word].length < 5);
+              word = word.toUpperCase();
+              const game = {
+                playerOneId: player1.jugador._id,
+                playerTwoId: player2.jugador._id,
+                winnerId: null,
+                wordToGuess: word,
+                attemptsPlayer1: [],
+                attemptsPlayer2: [],
+              };
+
+              const gameCreation = await createGame(game);
+
+              idGame = gameCreation._id;
+              io.emit("createGame", { idGame, word });
+              io.emit(`${gameCreation._id}`, { player1:player1.jugador, player2:player2.jugador });
+              const deleteid = Object.keys(players);
+              delete playersFriend[deleteid[0]];
+              delete playersFriend[deleteid[1]];  
+              
+              io.emit('friendMessage' ,{idgame:idGame,menssaje:'creada'})
+             }
+        })
+       
+        
+        
+        
+        
+       
+        
+        
+      
+      
+      }
+
+    })
+    socket.on("quitarEmprejamientoFriend", (socketid) => {
+      delete playersFriend[socketid];
+       console.log('jugador esperando',Object.keys(playersFriend).length);
+    });
 
     socket.on("disconnect", () => {
       const disconect = {
