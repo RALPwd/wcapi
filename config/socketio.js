@@ -27,7 +27,6 @@ function connectSocket(server) {
     });
 
     socket.on("mensaje", (dataT) => {
-      console.log(dataT.typeChat);
       io.emit(`${dataT.typeChat}`, dataT.dataToSubmit);
     });
 
@@ -73,12 +72,10 @@ function connectSocket(server) {
     });
 
     socket.on("emitTurn", (data) => {
-      console.log("data", data);
       io.emit("emitTurn", data);
     });
 
     socket.on("quitarEmprejamiento", (socketid) => {
-      console.log("quitarEmprejamiento", socketid);
       delete players[socketid];
       io.emit("cantidadPlayers", Object.keys(players).length);
     });
@@ -90,7 +87,6 @@ function connectSocket(server) {
     socket.on('emparejamientoamigo', async ({data,code,type})=>{
       if(type==='create'){
         playersFriend[socket.id] = {jugador:data,code}; 
-        console.log('jugador esperando',Object.keys(playersFriend).length);
       }
       if(type==='join'){
         const socketIds = Object.values(playersFriend);
@@ -98,10 +94,8 @@ function connectSocket(server) {
           if(socketIds.find((arrayCode) => arrayCode.code === code))
           {
             playersFriend[socket.id] = {jugador:data,code}; 
-            console.log('jugador esperando',Object.keys(playersFriend).length);
             const socketIds2 = Object.values(playersFriend);
             const filtetPlayers2 = socketIds2.filter(codearray => codearray.code===code)
-            console.log('cantidad de jugadores luego del join ', filtetPlayers2.length);
              if (filtetPlayers2.length === 2) {
               const player1 = filtetPlayers2[0];
               const player2 = filtetPlayers2[1];     
@@ -124,7 +118,7 @@ function connectSocket(server) {
               idGame = gameCreation._id;
               io.emit("createGame", { idGame, word });
               io.emit(`${gameCreation._id}`, { player1:player1.jugador, player2:player2.jugador });
-              const deleteid = Object.keys(players);
+              const deleteid = Object.keys(playersFriend);
               delete playersFriend[deleteid[0]];
               delete playersFriend[deleteid[1]];  
               
@@ -141,7 +135,6 @@ function connectSocket(server) {
     })
     socket.on("quitarEmprejamientoFriend", (socketid) => {
       delete playersFriend[socketid];
-       console.log('jugador esperando',Object.keys(playersFriend).length);
     });
 
     socket.on("disconnect", () => {
