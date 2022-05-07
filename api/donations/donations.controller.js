@@ -75,6 +75,7 @@ async function handlecreateDonation(req, res) {
             fecha:payment.data.fecha
           }
         }
+        console.log(donationInfo);
 
         await createDonation(donationInfo);
         res.status(201).json({message: `Gracias por donar, por ti ahora somos ${paymentInfo.value} pesos más ricos.`, status: '201'});

@@ -95,14 +95,14 @@ function connectSocket(server) {
       if(type==='join'){
         const socketIds = Object.values(playersFriend);
         //Para el control z
-        socket.emit('arrayOfCreater', socketIds)
-        socket.on('verificateArray',async()=>{
-          playersFriend[socket.id] = {jugador:data,code}; 
-          console.log('jugador esperando',Object.keys(playersFriend).length);
-          const socketIds2 = Object.values(playersFriend);
-          const filtetPlayers2 = socketIds2.filter(codearray => codearray.code===code)
-           console.log('cantidad de jugadores luego del join ', filtetPlayers2.length);
-           if (filtetPlayers2.length === 2) {
+          if(socketIds.find((arrayCode) => arrayCode.code === code))
+          {
+            playersFriend[socket.id] = {jugador:data,code}; 
+            console.log('jugador esperando',Object.keys(playersFriend).length);
+            const socketIds2 = Object.values(playersFriend);
+            const filtetPlayers2 = socketIds2.filter(codearray => codearray.code===code)
+            console.log('cantidad de jugadores luego del join ', filtetPlayers2.length);
+             if (filtetPlayers2.length === 2) {
               const player1 = filtetPlayers2[0];
               const player2 = filtetPlayers2[1];     
                 let word;
@@ -128,19 +128,14 @@ function connectSocket(server) {
               delete playersFriend[deleteid[0]];
               delete playersFriend[deleteid[1]];  
               
-              io.emit('friendMessage' ,{idgame:idGame,menssaje:'creada'})
+              io.emit('emparejamientoamigo' ,{idgame:idGame,menssaje:'creada'})
+          }
+         
              }
-        })
-       
-        
-        
-        
-        
-       
-        
-        
-      
-      
+          else{
+              io.emit('emparejamientoamigo' ,{menssaje:'partida no encontra'})
+          }   
+    
       }
 
     })
