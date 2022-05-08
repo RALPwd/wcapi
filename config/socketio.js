@@ -38,6 +38,8 @@ function connectSocket(server) {
 
     let idGame;
 
+    
+
     socket.on("agregarPlayers", async (player) => {
       players[socket.id] = player;
       io.emit("cantidadPlayers", Object.keys(players).length);
@@ -62,7 +64,7 @@ function connectSocket(server) {
         const gameCreation = await createGame(game);
 
         idGame = gameCreation._id;
-        io.emit("createGame", { idGame, word });
+        io.emit("createGame", { idGame, word ,player1, player2 });
         io.emit(`${gameCreation._id}`, { player1, player2 });
         const deleteid = Object.keys(players);
         delete players[deleteid[0]];
@@ -116,7 +118,7 @@ function connectSocket(server) {
               const gameCreation = await createGame(game);
 
               idGame = gameCreation._id;
-              io.emit("createGame", { idGame, word });
+              io.emit("createGame", { idGame, word , player1:player1.jugador, player2:player2.jugador});
               io.emit(`${gameCreation._id}`, { player1:player1.jugador, player2:player2.jugador });
               const deleteid = Object.keys(playersFriend);
               delete playersFriend[deleteid[0]];
