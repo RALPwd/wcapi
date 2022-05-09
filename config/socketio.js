@@ -129,7 +129,7 @@ function connectSocket(server) {
          
              }
           else{
-              io.emit('emparejamientoamigo' ,{menssaje:'partida no encontra'})
+              io.emit('emparejamientoamigo' ,{menssaje:'Error, verifíca el código'})
           }   
     
       }
